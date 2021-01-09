@@ -23,7 +23,7 @@ class _ResultPageState extends State<ResultPage> {
               SizedBox(height: 10),
               Image.file(File(widget.style)),
               SizedBox(height: 10),
-              Image.memory(widget.result),
+              // Image.memory(widget.result),
             ],
           ),
         ),

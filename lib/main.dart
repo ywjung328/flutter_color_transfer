@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:bitmap/transformations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:stats/stats.dart';
 import 'package:style_transfer_port/functions/loading_overlay.dart';
 import 'package:style_transfer_port/functions/process_image.dart';
+import 'package:style_transfer_port/pages/page_home.dart';
 import 'package:style_transfer_port/result_page.dart';
 import 'package:bitmap/bitmap.dart';
-
-// import 'package:style_transfer_port/result_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,6 +21,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ));
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProcessImage()),
@@ -31,7 +38,8 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+        home: PageHome(),
+        // home: MyHomePage(title: "UGRP 2020"),
       ),
     );
   }
@@ -86,10 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     calcMeanStd(x) {
       final stat = Stats.fromData(x);
-      var mean = stat.average;
-      var std = stat.standardDeviation;
 
-      return [mean, std];
+      return [stat.min, stat.max, stat.average, stat.standardDeviation];
     }
 
     Bitmap imgDs = await resizeWidth(img, 480);
@@ -108,12 +114,52 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static colorTransfer(map) async {
     var input = map['input'];
+
     var inputStatR = map['inputStatR'];
     var inputStatG = map['inputStatG'];
     var inputStatB = map['inputStatB'];
     var styleStatR = map['styleStatR'];
     var styleStatG = map['styleStatG'];
     var styleStatB = map['styleStatB'];
+
+    var inputMinR = inputStatR[0];
+    var inputMaxR = inputStatR[1];
+    var inputAvgR = inputStatR[2];
+    var inputStdR = inputStatR[3];
+
+    var inputMinG = inputStatG[0];
+    var inputMaxG = inputStatG[1];
+    var inputAvgG = inputStatG[2];
+    var inputStdG = inputStatG[3];
+
+    var inputMinB = inputStatB[0];
+    var inputMaxB = inputStatB[1];
+    var inputAvgB = inputStatB[2];
+    var inputStdB = inputStatB[3];
+
+    var styleMinR = styleStatR[0];
+    var styleMaxR = styleStatR[1];
+    var styleAvgR = styleStatR[2];
+    var styleStdR = styleStatR[3];
+
+    var styleMinG = styleStatG[0];
+    var styleMaxG = styleStatG[1];
+    var styleAvgG = styleStatG[2];
+    var styleStdG = styleStatG[3];
+
+    var styleMinB = styleStatB[0];
+    var styleMaxB = styleStatB[1];
+    var styleAvgB = styleStatB[2];
+    var styleStdB = styleStatB[3];
+
+    var coefR1 = styleStdR / inputStdR;
+    var coefR2 = (styleMaxR - styleMinR) / (inputMaxR - inputMinR);
+
+    var coefG1 = styleStdG / inputStdG;
+    var coefG2 = (styleMaxG - styleMinG) / (inputMaxG - inputMinG);
+
+    var coefB1 = styleStdB / inputStdB;
+    var coefB2 = (styleMaxB - styleMinB) / (inputMaxB - inputMinB);
 
     var channel = input.content.length ~/ (input.width * input.height);
 
@@ -122,17 +168,20 @@ class _MyHomePageState extends State<MyHomePage> {
       var green = input.content[i + 1];
       var blue = input.content[i + 2];
 
-      red = (red - inputStatR[0]) * (styleStatR[1] / inputStatR[1]) +
-          styleStatR[0];
-      input.content[i] = red.round().clamp(0, 255);
+      red = (red - inputAvgR) * coefR1 + styleAvgR;
+      red = red.round().clamp(styleMinR, styleMaxR);
+      // input.content[i] = ((red - inputMinR) * coefR2 + styleMinR).round();
+      input.content[i] = red;
 
-      green = (green - inputStatG[0]) * (styleStatG[1] / inputStatG[1]) +
-          styleStatG[0];
-      input.content[i + 1] = green.round().clamp(0, 255);
+      green = (green - inputAvgG) * coefG1 + styleAvgG;
+      green = green.round().clamp(styleMinG, styleMaxG);
+      // input.content[i + 1] = ((green - inputMinG) * coefG2 + styleMinG).round();
+      input.content[i + 1] = green;
 
-      blue = (blue - inputStatB[0]) * (styleStatB[1] / inputStatB[1]) +
-          styleStatB[0];
-      input.content[i + 2] = blue.round().clamp(0, 255);
+      blue = (blue - inputAvgB) * coefB1 + styleAvgB;
+      blue = blue.round().clamp(styleMinB, styleMaxB);
+      // input.content[i + 2] = ((blue - inputMinB) * coefB2 + styleMinB).round();
+      input.content[i + 2] = blue;
     }
 
     return input.content;
@@ -153,64 +202,100 @@ class _MyHomePageState extends State<MyHomePage> {
               FlatButton(
                 child: Text("Input Image"),
                 onPressed: () async {
+                  overlay.show();
                   input = null;
                   inputPath = null;
                   var _input = await getImage();
-                  inputPath = _input[0];
-                  input = _input[1];
+
+                  if (_input == null)
+                    overlay.hide();
+                  else {
+                    inputPath = _input[0];
+                    input = _input[1];
+                    overlay.hide();
+                  }
                 },
               ),
               FlatButton(
                 child: Text("Style Image"),
                 onPressed: () async {
+                  overlay.show();
                   style = null;
                   stylePath = null;
                   var _style = await getImage();
-                  stylePath = _style[0];
-                  style = _style[1];
+
+                  if (_style == null)
+                    overlay.hide();
+                  else {
+                    stylePath = _style[0];
+                    style = _style[1];
+                    overlay.hide();
+                  }
                 },
               ),
               FlatButton(
                 child: Text("Transfer"),
                 onPressed: () async {
                   if (inputPath != null && stylePath != null) {
-                    overlay.show();
-                    result = null;
+                    // overlay.show();
+                    // result = null;
 
-                    Map map = Map();
+                    // Map map = Map();
 
-                    var inputStat = await compute(getStyleVariables, input);
-                    var styleStat = await compute(getStyleVariables, style);
+                    // var inputStat = await compute(getStyleVariables, input);
+                    // var styleStat = await compute(getStyleVariables, style);
 
-                    map['input'] = input;
-                    map['inputStatR'] = inputStat[0];
-                    map['inputStatG'] = inputStat[1];
-                    map['inputStatB'] = inputStat[2];
-                    map['styleStatR'] = styleStat[0];
-                    map['styleStatG'] = styleStat[1];
-                    map['styleStatB'] = styleStat[2];
+                    // map['input'] = input;
+                    // map['inputStatR'] = inputStat[0];
+                    // map['inputStatG'] = inputStat[1];
+                    // map['inputStatB'] = inputStat[2];
+                    // map['styleStatR'] = styleStat[0];
+                    // map['styleStatG'] = styleStat[1];
+                    // map['styleStatB'] = styleStat[2];
 
-                    result = await compute(colorTransfer, map);
-                    // var result = await colorTransfer(map);
-                    // await overlay.during(colorTransfer(map));
-                    overlay.hide();
+                    // result = await compute(colorTransfer, map);
+
+                    // overlay.hide();
 
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => ResultPage(
-                          input: inputPath,
-                          // input: input.getBytes(),
-                          style: stylePath,
-                          // style: style.getBytes(),
-                          result: Bitmap.fromHeadless(
-                                  input.width, input.height, result)
-                              .buildHeaded(),
-                        ),
-                      ),
+                      // MaterialPageRoute(
+                      //   builder: (context) => ResultPage(
+                      //     input: inputPath,
+                      //     // input: input.getBytes(),
+                      //     style: stylePath,
+                      //     // style: style.getBytes(),
+                      //     result: Bitmap.fromHeadless(
+                      //             input.width, input.height, result)
+                      //         .buildHeaded(),
+                      //   ),
+                      // ),
+                      PageRouteBuilder(
+                          pageBuilder: (context, animation, anotherAnimation) =>
+                              ResultPage(
+                                input: inputPath,
+                                style: stylePath,
+                                result: Bitmap.fromHeadless(
+                                        input.width, input.height, result)
+                                    .buildHeaded(),
+                              ),
+                          transitionDuration: Duration(seconds: 1),
+                          transitionsBuilder:
+                              (context, animation, anotherAnimation, child) {
+                            animation = CurvedAnimation(
+                                curve: Curves.easeInOut, parent: animation);
+                            return SlideTransition(
+                              position: Tween(
+                                begin: Offset(1.0, 0.0),
+                                end: Offset(0.0, 0.0),
+                              ).animate(animation),
+                              child: child,
+                            );
+                          }),
                     );
                   } else {
-                    print("null state");
+                    print(input == null);
+                    print(style == null);
                     Scaffold.of(context).showSnackBar(SnackBar(
                       content: Text("Sending Message"),
                       action: SnackBarAction(
@@ -218,7 +303,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () => {},
                       ),
                     ));
-                    print("않이 외않되");
                   }
                 },
               ),
