@@ -18,11 +18,11 @@ getPath() async {
   return pickedFile.path;
 }
 
-getImage(String srcPath) async {
+Future<SourceImage> getImage(String srcPath) async {
   Bitmap srcImg = await Bitmap.fromProvider(FileImage(File(srcPath)));
   // Map<String, String> exif = await getExif(srcPath);
 
-  bool portrait = srcImg.width < srcImg.height;
+  // bool portrait = srcImg.width < srcImg.height;
 
   // notifyListeners();
   return SourceImage(srcImg: srcImg, srcPath: srcPath);

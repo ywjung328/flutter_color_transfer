@@ -5,7 +5,7 @@ import 'package:bitmap/bitmap.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_save/image_save.dart';
 import 'package:style_transfer_port/functions/loading_overlay.dart';
 import 'package:style_transfer_port/functions/process_image.dart';
 import 'package:style_transfer_port/models/model.dart';
@@ -136,7 +136,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                               if (stylePath != null &&
                                   oldStylePath != stylePath) {
-                                style = await getImage(stylePath);
+                                // style = await getImage(stylePath);
+                                style = await compute(getImage, stylePath);
                                 setState(() {
                                   // print(style == null);
                                 });
@@ -163,7 +164,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                                   if (stylePath != null &&
                                       oldStylePath != stylePath) {
-                                    style = await getImage(stylePath);
+                                    // style = await getImage(stylePath);
+                                    style = await compute(getImage, stylePath);
                                     setState(() {
                                       // print(style == null);
                                     });
@@ -256,7 +258,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                               if (inputPath != null &&
                                   oldInputPath != inputPath) {
-                                input = await getImage(inputPath);
+                                // input = await getImage(inputPath);
+                                input = await compute(getImage, inputPath);
                                 setState(() {
                                   // print(style == null);
                                 });
@@ -283,7 +286,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                                   if (inputPath != null &&
                                       oldinputPath != inputPath) {
-                                    input = await getImage(inputPath);
+                                    // input = await getImage(inputPath);
+                                    input = await compute(getImage, inputPath);
                                     setState(() {
                                       // print(style == null);
                                     });
@@ -411,8 +415,12 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
               onPressed: () async {
                 LoadingOverlay.of(context).show();
 
-                final result =
-                    await ImageGallerySaver.saveImage(resultBytesData);
+                String resultName =
+                    "${inputPath.split("/").last.split(".").first}_${stylePath.split("/").last.split(".").first}.png";
+                // print(resultName);
+                bool success = await ImageSave.saveImage(
+                    resultBytesData, resultName,
+                    albumName: "Flutter Style Transfer");
 
                 LoadingOverlay.of(context).hide();
               },

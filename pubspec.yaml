@@ -34,7 +34,7 @@ dependencies:
   bitmap: ^0.0.6
   lottie: ^0.7.0+1
   smooth_page_indicator: ^0.2.0
-  image_gallery_saver: '^1.6.7'
+  image_save: ^4.0.1
 
 dev_dependencies:
   flutter_test:
