@@ -119,7 +119,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                             height: 75,
                             color: lightAppColors["background"],
                             inactiveColor: lightAppColors["background"],
-                            duration: 600,
+                            duration: 100,
                             child: Center(
                               child: Icon(Icons.add_a_photo_outlined,
                                   color: lightAppColors["bg1"]),
@@ -136,8 +136,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                               if (stylePath != null &&
                                   oldStylePath != stylePath) {
-                                // style = await getImage(stylePath);
-                                style = await compute(getImage, stylePath);
+                                style = await getImage(stylePath);
                                 setState(() {
                                   // print(style == null);
                                 });
@@ -164,8 +163,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                                   if (stylePath != null &&
                                       oldStylePath != stylePath) {
-                                    // style = await getImage(stylePath);
-                                    style = await compute(getImage, stylePath);
+                                    style = await getImage(stylePath);
                                     setState(() {
                                       // print(style == null);
                                     });
@@ -241,7 +239,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                             height: 75,
                             color: lightAppColors["background"],
                             inactiveColor: lightAppColors["background"],
-                            duration: 600,
+                            duration: 100,
                             child: Center(
                               child: Icon(Icons.add_a_photo_outlined,
                                   color: lightAppColors["bg1"]),
@@ -258,8 +256,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                               if (inputPath != null &&
                                   oldInputPath != inputPath) {
-                                // input = await getImage(inputPath);
-                                input = await compute(getImage, inputPath);
+                                input = await getImage(inputPath);
                                 setState(() {
                                   // print(style == null);
                                 });
@@ -286,8 +283,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                                   if (inputPath != null &&
                                       oldinputPath != inputPath) {
-                                    // input = await getImage(inputPath);
-                                    input = await compute(getImage, inputPath);
+                                    input = await getImage(inputPath);
                                     setState(() {
                                       // print(style == null);
                                     });
