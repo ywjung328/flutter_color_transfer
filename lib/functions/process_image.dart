@@ -124,22 +124,30 @@ Future<Uint8List> colorTransfer(map) async {
 
   var channel = input.content.length ~/ (input.width * input.height);
 
+  double inputAvg = (inputAvgR + inputAvgG + inputAvgB) / 3;
+  double styleAvg = (styleAvgR + styleAvgG + styleAvgB) / 3;
+
+  double expRatio = inputAvg / styleAvg;
+
   for (int i = 0; i < input.content.length; i += channel) {
     var red = input.content[i];
     var green = input.content[i + 1];
     var blue = input.content[i + 2];
 
-    red = (red - inputAvgR) * coefR1 + styleAvgR;
+    // red = (red - inputAvgR) * coefR1 + styleAvgR;
+    red = (red - inputAvgR) * coefR1 + (styleAvgR * expRatio);
     red = red.round().clamp(styleMinR, styleMaxR);
     // input.content[i] = ((red - inputMinR) * coefR2 + styleMinR).round();
     input.content[i] = red;
 
-    green = (green - inputAvgG) * coefG1 + styleAvgG;
+    // green = (green - inputAvgG) * coefG1 + styleAvgG;
+    green = (green - inputAvgG) * coefG1 + (styleAvgG * expRatio);
     green = green.round().clamp(styleMinG, styleMaxG);
     // input.content[i + 1] = ((green - inputMinG) * coefG2 + styleMinG).round();
     input.content[i + 1] = green;
 
-    blue = (blue - inputAvgB) * coefB1 + styleAvgB;
+    // blue = (blue - inputAvgB) * coefB1 +styleAvgB;
+    blue = (blue - inputAvgB) * coefB1 + (styleAvgB * expRatio);
     blue = blue.round().clamp(styleMinB, styleMaxB);
     // input.content[i + 2] = ((blue - inputMinB) * coefB2 + styleMinB).round();
     input.content[i + 2] = blue;
