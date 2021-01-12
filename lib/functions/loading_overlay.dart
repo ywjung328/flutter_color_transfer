@@ -6,12 +6,12 @@ class LoadingOverlay {
   BuildContext _context;
 
   void hide() {
-    print("hide overlay");
+    // print("hide overlay");
     Navigator.of(_context).pop();
   }
 
   void show() {
-    print("show overlay");
+    // print("show overlay");
     showDialog(
         context: _context,
         barrierDismissible: false,

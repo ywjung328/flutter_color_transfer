@@ -5,13 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:stats/stats.dart';
 import 'package:style_transfer_port/functions/loading_overlay.dart';
-import 'package:style_transfer_port/functions/process_image.dart';
-import 'package:style_transfer_port/pages/page_home.dart';
+import 'package:style_transfer_port/ui/page_home.dart';
 import 'package:style_transfer_port/result_page.dart';
 import 'package:bitmap/bitmap.dart';
+
+import 'models/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,26 +21,34 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ));
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ProcessImage()),
-      ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.light,
+          // systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarColor: lightAppColors["background"],
+          systemNavigationBarIconBrightness: Brightness.dark),
+    );
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        textTheme: TextTheme(
+          bodyText1: TextStyle(
+            color: lightAppColors["text1"],
+          ),
+          bodyText2: TextStyle(
+            color: lightAppColors["text1"],
+          ),
         ),
-        home: PageHome(),
-        // home: MyHomePage(title: "UGRP 2020"),
       ),
+      home: PageHome(),
+      // home: MyHomePage(title: "UGRP 2020"),
     );
   }
 }
