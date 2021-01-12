@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:bitmap/bitmap.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:image_save/image_save.dart';
 import 'package:style_transfer_port/functions/loading_overlay.dart';
@@ -450,6 +451,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                     color: lightAppColors["background"],
                   ),
                   onPressed: () {
+                    HapticFeedback.mediumImpact();
                     if (pageController.page <= 1.0)
                       animationControllerFromLeft.reverse();
                     animationControllerFromRight.reverse();
@@ -472,6 +474,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                       color: lightAppColors["background"],
                     ),
                     onPressed: () async {
+                      HapticFeedback.mediumImpact();
                       await Future(() {
                         setState(() {
                           style = null;
