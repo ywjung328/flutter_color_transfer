@@ -5,8 +5,12 @@ import 'package:bitmap/bitmap.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/painting.dart';
+
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:image_save/image_save.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
 import 'package:style_transfer_port/functions/loading_overlay.dart';
 import 'package:style_transfer_port/functions/process_image.dart';
 import 'package:style_transfer_port/models/model.dart';
@@ -73,6 +77,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
       CurvedAnimation(
           parent: animationControllerFromRight, curve: Curves.easeInOut),
     );
+
+    DefaultCacheManager().emptyCache();
   }
 
   @override
@@ -81,6 +87,9 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
     pageController.dispose();
     animationControllerFromLeft.dispose();
     animationControllerFromRight.dispose();
+
+    // PaintingBinding.instance.imageCache.clear();
+    DefaultCacheManager().emptyCache();
 
     super.dispose();
   }
@@ -349,6 +358,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                     curve: Curves.easeInOut);
                 // animationControllerFromLeft.reverse();
                 animationControllerFromRight.forward();
+                animationControllerFromLeft.reverse();
               },
             ),
           ),
@@ -419,6 +429,19 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                     resultBytesData, resultName,
                     albumName: "Flutter Style Transfer");
 
+                await Future(() {
+                  setState(() {
+                    style = null;
+                    input = null;
+                    stylePath = null;
+                    inputPath = null;
+                    // resultBytesData = null;
+                  });
+                });
+
+                // PaintingBinding.instance.imageCache.clear();
+                DefaultCacheManager().emptyCache();
+
                 LoadingOverlay.of(context).hide();
               },
             ),
@@ -484,6 +507,9 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                           // resultBytesData = null;
                         });
                       });
+                      // PaintingBinding.instance.imageCache.clear();
+                      DefaultCacheManager().emptyCache();
+
                       animationControllerFromLeft.reverse();
                       animationControllerFromRight.reverse();
                       pageController.animateToPage(
