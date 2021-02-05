@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/painting.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:image_save/image_save.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import 'package:style_transfer_port/functions/loading_overlay.dart';
 import 'package:style_transfer_port/functions/process_image.dart';
+// import 'package:style_transfer_port/functions/clear_cache.dart';
 import 'package:style_transfer_port/models/model.dart';
 import 'package:style_transfer_port/models/theme.dart';
 import 'package:style_transfer_port/widgets/bouncing_button.dart';
@@ -37,6 +39,22 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
   String inputPath;
 
   Uint8List resultBytesData;
+
+  Future<void> _deleteCacheDir() async {
+    final cacheDir = await getTemporaryDirectory();
+
+    if (cacheDir.existsSync()) {
+      cacheDir.deleteSync(recursive: true);
+    }
+  }
+
+  Future<void> _deleteAppDir() async {
+    final appDir = await getApplicationSupportDirectory();
+
+    if (appDir.existsSync()) {
+      appDir.deleteSync(recursive: true);
+    }
+  }
 
   @override
   void initState() {
@@ -79,6 +97,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
     );
 
     DefaultCacheManager().emptyCache();
+    // await _deleteCacheDir();
   }
 
   @override
@@ -90,6 +109,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
     // PaintingBinding.instance.imageCache.clear();
     DefaultCacheManager().emptyCache();
+    // await _deleteCacheDir();
 
     super.dispose();
   }
@@ -441,6 +461,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                 // PaintingBinding.instance.imageCache.clear();
                 DefaultCacheManager().emptyCache();
+                // await _deleteCacheDir();
 
                 LoadingOverlay.of(context).hide();
               },
@@ -509,6 +530,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                       });
                       // PaintingBinding.instance.imageCache.clear();
                       DefaultCacheManager().emptyCache();
+                      // await _deleteCacheDir();
 
                       animationControllerFromLeft.reverse();
                       animationControllerFromRight.reverse();
