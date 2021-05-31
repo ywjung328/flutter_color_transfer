@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:bitmap/bitmap.dart';
@@ -159,7 +159,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                               String oldStylePath = stylePath;
 
                               stylePath = await getPath();
-                              // print(stylePath);
+                              print(stylePath);
 
                               if (stylePath == null && oldStylePath != null)
                                 stylePath = oldStylePath;
@@ -168,7 +168,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                                   oldStylePath != stylePath) {
                                 style = await getImage(stylePath);
                                 setState(() {
-                                  // print(style == null);
+                                  print(style == null);
                                 });
                               }
                               LoadingOverlay.of(context).hide();
@@ -180,13 +180,13 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                                 radius: 0,
                                 // color: lightAppColors["background"],
                                 // color: Colors.transparent,
-                                child: Image.file(File(stylePath)),
+                                child: Image.file(io.File(stylePath)),
                                 onPressed: () async {
                                   LoadingOverlay.of(context).show();
                                   String oldStylePath = stylePath;
 
                                   stylePath = await getPath();
-                                  // print(stylePath);
+                                  print(stylePath);
 
                                   if (stylePath == null && oldStylePath != null)
                                     stylePath = oldStylePath;
@@ -195,7 +195,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                                       oldStylePath != stylePath) {
                                     style = await getImage(stylePath);
                                     setState(() {
-                                      // print(style == null);
+                                      print(style == null);
                                     });
                                   }
                                   LoadingOverlay.of(context).hide();
@@ -300,7 +300,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                                 radius: 0,
                                 // color: lightAppColors["background"],
                                 // color: Colors.transparent,
-                                child: Image.file(File(inputPath)),
+                                // child: Image.file(File(inputPath)),
+                                child: Image.file(io.File(inputPath)),
                                 onPressed: () async {
                                   LoadingOverlay.of(context).show();
                                   String oldinputPath = inputPath;

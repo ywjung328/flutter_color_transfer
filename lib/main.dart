@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:bitmap/transformations.dart';
+import 'package:bitmap/bitmap.dart';
+// import 'package:bitmap/src/operation/resize.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +10,6 @@ import 'package:stats/stats.dart';
 import 'package:style_transfer_port/functions/loading_overlay.dart';
 import 'package:style_transfer_port/ui/page_home.dart';
 import 'package:style_transfer_port/result_page.dart';
-import 'package:bitmap/bitmap.dart';
 
 import 'models/theme.dart';
 
@@ -107,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return [stat.min, stat.max, stat.average, stat.standardDeviation];
     }
 
-    Bitmap imgDs = await resizeWidth(img, 480);
+    Bitmap imgDs = await img.BitmapResize.to(480);
     var imgColor = splitChannel(imgDs);
 
     List<num> imgR = imgColor[0].cast<num>().toList();

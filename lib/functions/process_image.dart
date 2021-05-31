@@ -3,7 +3,7 @@ import 'dart:typed_data';
 // import 'dart:typed_data';
 
 import 'package:bitmap/bitmap.dart';
-import 'package:bitmap/transformations/resize.dart';
+// import 'package:bitmap/transformations/resize.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stats/stats.dart';
@@ -53,7 +53,8 @@ getStyleVariables(img) async {
     return [stat.min, stat.max, stat.average, stat.standardDeviation];
   }
 
-  Bitmap imgDs = await resizeWidth(img, 480);
+  // Bitmap imgDs = await img.BitmapResize.to(480);
+  Bitmap imgDs = img.apply(BitmapResize.to(width: 480));
   var imgColor = splitChannel(imgDs);
 
   List<num> imgR = imgColor[0].cast<num>().toList();
