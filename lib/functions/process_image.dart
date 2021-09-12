@@ -1,31 +1,42 @@
 import 'dart:io';
 import 'dart:typed_data';
-// import 'dart:typed_data';
+import 'dart:html' as html;
 
-import 'package:bitmap/bitmap.dart';
+// import 'package:bitmap/bitmap.dart';
 // import 'package:bitmap/transformations/resize.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:stats/stats.dart';
 import 'package:style_transfer_port/models/model.dart';
 
+/*
 getPath() async {
-  final picker = ImagePicker();
-  final pickedFile = await picker.getImage(source: ImageSource.gallery);
+  // final picker = ImagePicker()
+  final html.File pickedFile =
+      await ImagePickerWeb.getImage(outputType: ImageType.file);
+  // final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
   if (pickedFile == null) return;
 
-  return pickedFile.path;
+  return pickedFile.name;
 }
+*/
 
-Future<SourceImage> getImage(String srcPath) async {
-  Bitmap srcImg = await Bitmap.fromProvider(FileImage(File(srcPath)));
+Future<SourceImage> getImage() async {
+  final Uint8List srcData =
+      await ImagePickerWeb.getImage(outputType: ImageType.bytes);
+
+  if (srcData == null) return null;
+
+  final String srcName = 'temp/${DateTime.now()}.png';
+  // Bitmap srcImg = await Bitmap.fromProvider(FileImage(File(srcPath)));
   // Map<String, String> exif = await getExif(srcPath);
 
   // bool portrait = srcImg.width < srcImg.height;
 
   // notifyListeners();
-  return SourceImage(srcImg: srcImg, srcPath: srcPath);
+  return SourceImage(srcData: srcData, srcName: srcName);
 }
 
 getStyleVariables(img) async {

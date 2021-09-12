@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:bitmap/bitmap.dart';
+// import 'package:bitmap/bitmap.dart';
+import 'package:image/image.dart';
 
 enum DIRECTION {
   HEAD,
@@ -9,13 +10,14 @@ enum DIRECTION {
 }
 
 class SourceImage {
-  final Bitmap srcImg;
-  final String srcPath;
+  // final Bitmap srcImg;
+  final Uint8List srcData;
+  final String srcName;
   // final bool portrait;
   // final Map<String, String> exif;
 
   // SourceImage({this.srcImg, this.srcPath, this.portrait, this.exif});
-  SourceImage({this.srcImg, this.srcPath});
+  SourceImage({this.srcData, this.srcName});
 }
 
 class ResultImage {
