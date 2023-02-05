@@ -208,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text("Input Image"),
                 onPressed: () async {
                   overlay.show();
@@ -225,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Text("Style Image"),
                 onPressed: () async {
                   overlay.show();
@@ -242,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Text("Transfer"),
                 onPressed: () async {
                   if (inputPath != null && stylePath != null) {
@@ -305,7 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   } else {
                     print(input == null);
                     print(style == null);
-                    Scaffold.of(context).showSnackBar(SnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("Sending Message"),
                       action: SnackBarAction(
                         label: 'Close',
