@@ -175,7 +175,6 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                               if (oldStylePath != stylePath) {
                                 style = await getImage(stylePath);
-                                LoadingOverlay.of(context).hide();
                                 setState(() {
                                   isStyleSet = true;
                                 });
@@ -204,7 +203,6 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                                   if (oldStylePath != stylePath) {
                                     style = await getImage(stylePath);
-                                    LoadingOverlay.of(context).hide();
                                     setState(() {
                                       isStyleSet = true;
                                     });
