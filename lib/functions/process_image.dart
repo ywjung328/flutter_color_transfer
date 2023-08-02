@@ -36,7 +36,7 @@ getStyleVariables(img) async {
     var green = [];
     var blue = [];
 
-    var channel = bytes.length ~/ (image.width * image.height);
+    int channel = bytes.length ~/ (image.width * image.height);
 
     for (int i = 0; i < bytes.length; i += channel) {
       red.add(bytes[i]);
@@ -123,7 +123,7 @@ Future<Uint8List> colorTransfer(map) async {
   var coefB1 = styleStdB / inputStdB;
   // var coefB2 = (styleMaxB - styleMinB) / (inputMaxB - inputMinB);
 
-  var channel = input.content.length ~/ (input.width * input.height);
+  int channel = input.content.length ~/ (input.width * input.height);
 
   double inputAvg = (inputAvgR + inputAvgG + inputAvgB) / 3;
   double styleAvg = (styleAvgR + styleAvgG + styleAvgB) / 3;

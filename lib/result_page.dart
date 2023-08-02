@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class ResultPage extends StatefulWidget {
-  ResultPage({Key key, this.input, this.style, this.result}) : super(key: key);
+  ResultPage({this.input, this.style, this.result});
   final input, style, result;
   @override
   _ResultPageState createState() => _ResultPageState();

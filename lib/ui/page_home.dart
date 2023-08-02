@@ -1,11 +1,11 @@
 import 'dart:io' as io;
-import 'dart:typed_data';
+// import 'dart:typed_data';
 
 import 'package:bitmap/bitmap.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/painting.dart';
+// import 'package:flutter/painting.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -25,20 +25,23 @@ class PageHome extends StatefulWidget {
 }
 
 class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
-  PageController pageController;
-  ColorTween colorTween;
-  AnimationController animationControllerFromLeft;
-  AnimationController animationControllerFromRight;
-  Animation<Offset> animationFromLeft;
-  Animation<Offset> animationFromRight;
+  late PageController pageController;
+  late ColorTween colorTween;
+  late AnimationController animationControllerFromLeft;
+  late AnimationController animationControllerFromRight;
+  late Animation<Offset> animationFromLeft;
+  late Animation<Offset> animationFromRight;
 
-  SourceImage style;
-  SourceImage input;
+  late SourceImage style;
+  late SourceImage input;
 
-  String stylePath;
-  String inputPath;
+  late String stylePath;
+  late String inputPath;
 
-  Uint8List resultBytesData;
+  late Uint8List resultBytesData;
+
+  late bool isStyleSet;
+  late bool isInputSet;
 
   Future<void> _deleteCacheDir() async {
     final cacheDir = await getTemporaryDirectory();
@@ -58,7 +61,6 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     colorTween =
@@ -98,11 +100,16 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
     DefaultCacheManager().emptyCache();
     // await _deleteCacheDir();
+
+    isStyleSet = false;
+    isInputSet = false;
+
+    stylePath = '';
+    inputPath = '';
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     pageController.dispose();
     animationControllerFromLeft.dispose();
     animationControllerFromRight.dispose();
@@ -142,13 +149,13 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                 Text("Tap the button or image below to choose / change image."),
                 Expanded(
                   child: Center(
-                    child: style == null
+                    child: !isStyleSet
                         ? BouncingButton(
                             radius: 100,
                             width: 75,
                             height: 75,
-                            color: lightAppColors["background"],
-                            inactiveColor: lightAppColors["background"],
+                            color: lightAppColors["background"]!,
+                            inactiveColor: lightAppColors["background"]!,
                             duration: 100,
                             child: Center(
                               child: Icon(Icons.add_a_photo_outlined,
@@ -161,14 +168,12 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                               stylePath = await getPath();
                               print(stylePath);
 
-                              if (stylePath == null && oldStylePath != null)
-                                stylePath = oldStylePath;
+                              if (stylePath.isEmpty) stylePath = oldStylePath;
 
-                              if (stylePath != null &&
-                                  oldStylePath != stylePath) {
+                              if (oldStylePath != stylePath) {
                                 style = await getImage(stylePath);
                                 setState(() {
-                                  print(style == null);
+                                  isStyleSet = true;
                                 });
                               }
                               LoadingOverlay.of(context).hide();
@@ -177,6 +182,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                         : Padding(
                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                             child: BouncingButton(
+                                width: 50,
+                                height: 50,
                                 radius: 0,
                                 // color: lightAppColors["background"],
                                 // color: Colors.transparent,
@@ -188,14 +195,13 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                                   stylePath = await getPath();
                                   print(stylePath);
 
-                                  if (stylePath == null && oldStylePath != null)
+                                  if (stylePath.isEmpty)
                                     stylePath = oldStylePath;
 
-                                  if (stylePath != null &&
-                                      oldStylePath != stylePath) {
+                                  if (oldStylePath != stylePath) {
                                     style = await getImage(stylePath);
                                     setState(() {
-                                      print(style == null);
+                                      isStyleSet = true;
                                     });
                                   }
                                   LoadingOverlay.of(context).hide();
@@ -208,20 +214,20 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
           ),
           Container(
             child: BouncingButton(
-              active: style != null,
+              active: isStyleSet,
               radius: 100,
               width: width * 0.6,
               height: height * 0.075,
-              color: lightAppColors["background"],
-              inactiveColor: lightAppColors["background"].withOpacity(0.5),
+              color: lightAppColors["background"]!,
+              inactiveColor: lightAppColors["background"]!.withOpacity(0.5),
               duration: 100,
               child: Center(
-                child: style == null
+                child: !isStyleSet
                     ? Text(
                         "Choose image first",
                         style: TextStyle(
                           // color: lightAppColors["background"],
-                          color: lightAppColors["background"].withOpacity(0.5),
+                          color: lightAppColors["background"]!.withOpacity(0.5),
                           fontSize: 20,
                         ),
                       )
@@ -262,13 +268,13 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                 Text("Tap the button or image below to choose / change image."),
                 Expanded(
                   child: Center(
-                    child: input == null
+                    child: !isInputSet
                         ? BouncingButton(
                             radius: 100,
                             width: 75,
                             height: 75,
-                            color: lightAppColors["background"],
-                            inactiveColor: lightAppColors["background"],
+                            color: lightAppColors["background"]!,
+                            inactiveColor: lightAppColors["background"]!,
                             duration: 100,
                             child: Center(
                               child: Icon(Icons.add_a_photo_outlined,
@@ -281,14 +287,12 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                               inputPath = await getPath();
                               // print(stylePath);
 
-                              if (inputPath == null && oldInputPath != null)
-                                inputPath = oldInputPath;
+                              if (inputPath.isEmpty) inputPath = oldInputPath;
 
-                              if (inputPath != null &&
-                                  oldInputPath != inputPath) {
+                              if (oldInputPath != inputPath) {
                                 input = await getImage(inputPath);
                                 setState(() {
-                                  // print(style == null);
+                                  isInputSet = true;
                                 });
                               }
                               LoadingOverlay.of(context).hide();
@@ -297,6 +301,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                         : Padding(
                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                             child: BouncingButton(
+                                width: 50,
+                                height: 50,
                                 radius: 0,
                                 // color: lightAppColors["background"],
                                 // color: Colors.transparent,
@@ -309,14 +315,13 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                                   inputPath = await getPath();
                                   // print(stylePath);
 
-                                  if (inputPath == null && oldinputPath != null)
+                                  if (inputPath.isEmpty)
                                     inputPath = oldinputPath;
 
-                                  if (inputPath != null &&
-                                      oldinputPath != inputPath) {
+                                  if (oldinputPath != inputPath) {
                                     input = await getImage(inputPath);
                                     setState(() {
-                                      // print(style == null);
+                                      isInputSet = true;
                                     });
                                   }
                                   LoadingOverlay.of(context).hide();
@@ -329,20 +334,20 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
           ),
           Container(
             child: BouncingButton(
-              active: input != null,
+              active: isInputSet,
               radius: 100,
               width: width * 0.6,
               height: height * 0.075,
-              color: lightAppColors["background"],
-              inactiveColor: lightAppColors["background"].withOpacity(0.5),
+              color: lightAppColors["background"]!,
+              inactiveColor: lightAppColors["background"]!.withOpacity(0.5),
               duration: 100,
               child: Center(
-                child: input == null
+                child: !isInputSet
                     ? Text(
                         "Choose image first",
                         style: TextStyle(
                           // color: lightAppColors["background"],
-                          color: lightAppColors["background"].withOpacity(0.5),
+                          color: lightAppColors["background"]!.withOpacity(0.5),
                           fontSize: 20,
                         ),
                       )
@@ -392,7 +397,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
           SizedBox(height: height * 0.1),
           Container(
             height: height * 0.5,
-            child: resultBytesData == null
+            child: resultBytesData.isEmpty
                 ? Text("Image data aren't computed yet. Check the condition.")
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -431,8 +436,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
               radius: 100,
               width: height * 0.075,
               height: height * 0.075,
-              color: lightAppColors["background"],
-              inactiveColor: lightAppColors["background"].withOpacity(0.5),
+              color: lightAppColors["background"]!,
+              inactiveColor: lightAppColors["background"]!.withOpacity(0.5),
               duration: 100,
               child: Center(
                 child: Icon(
@@ -447,15 +452,16 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                     "${inputPath.split("/").last.split(".").first}_${stylePath.split("/").last.split(".").first}.png";
                 // print(resultName);
                 bool success = await ImageSave.saveImage(
-                    resultBytesData, resultName,
-                    albumName: "Flutter Style Transfer");
+                        resultBytesData, resultName,
+                        albumName: "Flutter Style Transfer") ??
+                    false;
 
                 await Future(() {
                   setState(() {
-                    style = null;
-                    input = null;
-                    stylePath = null;
-                    inputPath = null;
+                    isStyleSet = false;
+                    isInputSet = false;
+                    stylePath = '';
+                    inputPath = '';
                     // resultBytesData = null;
                   });
                 });
@@ -478,7 +484,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
       animation: pageController,
       builder: (context, child) {
         final color = pageController.hasClients
-            ? pageController.page / (totalPages - 1)
+            ? pageController.page! / (totalPages - 1)
             : .0;
         return Scaffold(
           extendBodyBehindAppBar: true,
@@ -497,7 +503,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                   ),
                   onPressed: () {
                     HapticFeedback.mediumImpact();
-                    if (pageController.page <= 1.0)
+                    if (pageController.page! <= 1.0)
                       animationControllerFromLeft.reverse();
                     animationControllerFromRight.reverse();
                     pageController.previousPage(
@@ -522,10 +528,10 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                       HapticFeedback.mediumImpact();
                       await Future(() {
                         setState(() {
-                          style = null;
-                          input = null;
-                          stylePath = null;
-                          inputPath = null;
+                          isStyleSet = false;
+                          isInputSet = false;
+                          stylePath = '';
+                          inputPath = '';
                           // resultBytesData = null;
                         });
                       });
@@ -571,8 +577,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
             controller: pageController,
             count: totalPages,
             effect: WormEffect(
-              dotColor: lightAppColors["background"].withOpacity(0.3),
-              activeDotColor: lightAppColors["background"],
+              dotColor: lightAppColors["background"]!.withOpacity(0.3),
+              activeDotColor: lightAppColors["background"]!,
               dotHeight: 8,
             ),
           ),

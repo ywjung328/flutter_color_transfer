@@ -9,15 +9,15 @@ class BouncingButton extends StatefulWidget {
       {this.vibration = true,
       this.active = true,
       this.scale = 0.9,
-      this.radius,
-      this.width,
-      this.height,
+      required this.radius,
+      required this.width,
+      required this.height,
       this.elevation = 8,
       this.color = Colors.white,
       this.inactiveColor = Colors.grey,
       this.duration = 100,
-      this.child,
-      this.onPressed});
+      required this.child,
+      required this.onPressed});
 
   final bool vibration, active;
   final double scale, radius, width, height, elevation;
@@ -29,9 +29,9 @@ class BouncingButton extends StatefulWidget {
 
 class _BouncingButtonState extends State<BouncingButton>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation _animation;
-  double _scale;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  late double _scale;
 
   @override
   void initState() {
@@ -58,6 +58,7 @@ class _BouncingButtonState extends State<BouncingButton>
   @override
   Widget build(BuildContext context) {
     _scale = 1 - _animation.value * (1 - widget.scale);
+    // _scale = 1 - _animation.value * (1 - widget.scale);
     return widget.active
         ? GestureDetector(
             // onPointerDown: _onPointerDown,

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bitmap/bitmap.dart';
 // import 'package:bitmap/src/operation/resize.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,7 +54,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({required Key key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -84,13 +83,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static getStyleVariables(img) async {
     splitChannel(image) {
-      var bytes = image.content;
+      Uint8List bytes = image.content;
 
       var red = [];
       var green = [];
       var blue = [];
 
-      var channel = bytes.length ~/ (image.width * image.height);
+      int channel = bytes.length ~/ (image.width * image.height);
 
       for (int i = 0; i < bytes.length; i += channel) {
         red.add(bytes[i]);
@@ -170,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var coefB1 = styleStdB / inputStdB;
     var coefB2 = (styleMaxB - styleMinB) / (inputMaxB - inputMinB);
 
-    var channel = input.content.length ~/ (input.width * input.height);
+    int channel = input.content.length ~/ (input.width * input.height);
 
     for (int i = 0; i < input.content.length; i += channel) {
       var red = input.content[i];

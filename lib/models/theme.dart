@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Map<String, Color> lightAppColors = {
+final Map<String, Color> lightAppColors = {
   "background": Color(0xfff2f3f8),
   "text1": Color(0xfff2f3f8),
   "text2": Color(0xff0e0e2b),

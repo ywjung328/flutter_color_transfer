@@ -15,7 +15,7 @@ class SourceImage {
   // final Map<String, String> exif;
 
   // SourceImage({this.srcImg, this.srcPath, this.portrait, this.exif});
-  SourceImage({this.srcImg, this.srcPath});
+  SourceImage({required this.srcImg, required this.srcPath});
 }
 
 class ResultImage {
@@ -27,10 +27,10 @@ class ResultImage {
   final int channel;
 
   ResultImage(
-      {this.data,
-      this.width,
-      this.height,
-      this.size,
-      this.fileName,
-      this.channel});
+      {required this.data,
+      required this.width,
+      required this.height,
+      required this.size,
+      required this.fileName,
+      required this.channel});
 }
