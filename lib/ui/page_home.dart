@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io' as io;
 // import 'dart:typed_data';
 
@@ -100,6 +101,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
     DefaultCacheManager().emptyCache();
     // await _deleteCacheDir();
+
+    resultBytesData = Uint8List.fromList([]);
 
     isStyleSet = false;
     isInputSet = false;
