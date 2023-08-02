@@ -11,9 +11,9 @@ import 'package:style_transfer_port/models/model.dart';
 
 getPath() async {
   final picker = ImagePicker();
-  final pickedFile = await picker.getImage(source: ImageSource.gallery);
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-  if (pickedFile == null) return;
+  if (pickedFile == null) return '';
 
   return pickedFile.path;
 }

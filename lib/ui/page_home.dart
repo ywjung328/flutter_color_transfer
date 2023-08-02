@@ -175,6 +175,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                               if (oldStylePath != stylePath) {
                                 style = await getImage(stylePath);
+                                LoadingOverlay.of(context).hide();
                                 setState(() {
                                   isStyleSet = true;
                                 });
@@ -185,8 +186,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                         : Padding(
                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                             child: BouncingButton(
-                                width: height * 0.5,
-                                height: height * 0.5,
+                                width: width * 0.6,
+                                height: width * 0.6,
                                 radius: 0,
                                 // color: lightAppColors["background"],
                                 // color: Colors.transparent,
@@ -203,6 +204,7 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
 
                                   if (oldStylePath != stylePath) {
                                     style = await getImage(stylePath);
+                                    LoadingOverlay.of(context).hide();
                                     setState(() {
                                       isStyleSet = true;
                                     });
@@ -304,8 +306,8 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                         : Padding(
                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                             child: BouncingButton(
-                                width: height * 0.5,
-                                height: height * 0.5,
+                                width: width * 0.6,
+                                height: width * 0.6,
                                 radius: 0,
                                 // color: lightAppColors["background"],
                                 // color: Colors.transparent,
@@ -400,17 +402,6 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
           SizedBox(height: height * 0.1),
           Container(
             height: height * 0.5,
-            width: height * 0.5,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 12,
-                  offset: Offset(0.0, 4),
-                  color: Colors.black.withOpacity(0.3),
-                )
-              ],
-            ),
             child: resultBytesData.isEmpty
                 ? Text("Image data aren't computed yet. Check the condition.")
                 : Column(
@@ -428,6 +419,18 @@ class _PageHomeState extends State<PageHome> with TickerProviderStateMixin {
                           padding: const EdgeInsets.symmetric(vertical: 30.0),
                           child: Center(
                             child: Container(
+                              width: width * 0.6,
+                              height: width * 0.6,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 12,
+                                    offset: Offset(0.0, 4),
+                                    color: Colors.black.withOpacity(0.3),
+                                  )
+                                ],
+                              ),
                               child: Image.memory(resultBytesData),
                             ),
                           ),
